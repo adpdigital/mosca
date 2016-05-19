@@ -72,6 +72,27 @@ describe("mosca.Server", function() {
     });
   });
 
+  it("should emit \"pingreq\" of the corresponding client at a pingreq", function(done) {
+
+    var instance = this.instance;
+    buildClient(instance, done, function(client) {
+
+      var clientId = 'client';
+      var opts = buildOpts();
+      opts.clientId = clientId;
+
+      client.connect(opts);
+
+      instance.on('pingreq', function(c){
+        expect(c.id).to.equal(clientId);
+        client.disconnect();
+      });
+
+      client.pingreq();
+
+    });
+  });
+
   it("should pass mosca options to backend when publishing", function(done) {
     var instance = this.instance;
     buildClient(instance, done, function(client) {
@@ -146,6 +167,23 @@ describe("mosca.Server", function() {
         subscriptions: subscriptions,
         messageId: messageId
       });
+    });
+  });
+
+  it("should fail if persistence can not connect", function (done) {
+    var newSettings = moscaSettings();
+
+    newSettings.persistence = {
+      factory: mosca.persistence.Mongo,
+      url: "mongodb://someUrlCannotConnect"
+    };
+
+    var server = new mosca.Server(newSettings, function (err) {
+      if (err instanceof Error) {
+        done();
+      } else {
+        expect().fail("new mosca.Server should fail");
+      }
     });
   });
 
@@ -797,4 +835,6 @@ describe("mosca.Server - MQTT backend", function() {
       }
     });
   });
+
+
 });
