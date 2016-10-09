@@ -1,6 +1,6 @@
 {
   "name": "mosca",
-  "version": "2.0.1",
+  "version": "2.2.0",
   "description": "MQTT broker as a module",
   "main": "index.js",
   "bin": {
@@ -100,7 +100,6 @@
     "leveldown": "~1.4.3",
     "amqp": "~0.2.4",
     "ioredis": "^1.15.1",
-    "hiredis": "^0.4.1",
     "mongodb": "~2.1.4"
   }
 }
